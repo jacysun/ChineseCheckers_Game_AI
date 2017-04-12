@@ -48,6 +48,7 @@ def game_loop():
                     for i in range(len(player)):
                         if math.sqrt(math.pow(mouse_pos[0] - player[i].pos[0], 2) + math.pow(mouse_pos[1] - player[i].pos[1], 2)) < 20:
                             player[i].selected(light_red)
+                            player[i].show_possible_moves()
                             selected_checker = player[i]
                             break
                     for i in range(len(player)):
@@ -60,6 +61,7 @@ def game_loop():
                         if math.sqrt(math.pow(mouse_pos[0] - selected_checker.pos[0], 2) + math.pow(mouse_pos[1] - selected_checker.pos[1], 2)) < 20:
                             if selected_checker.color == red:
                                 selected_checker.selected(red)
+                                selected_checker.hide_possible_moves()
                             else:
                                 selected_checker.selected(blue)
                             selected_checker = None
