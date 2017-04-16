@@ -1,5 +1,4 @@
 from board import *
-import math
 
 pygame.init()
 
@@ -13,13 +12,12 @@ def game_loop():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                global selected_checker
+                global selected_checker, player, ai
                 if selected_checker is None:
-                    print("enter none selected")
-                    for i in range(len(player)):
-                        if math.sqrt(math.pow(mouse_pos[0] - player[i].pos[0], 2) + math.pow(mouse_pos[1] - player[i].pos[1], 2)) < 20:
-                            player[i].selected()
-                            selected_checker = player[i]
+                    for i in range(len(player.checkers)):
+                        if math.sqrt(math.pow(mouse_pos[0] - player.checkers[i].pos[0], 2) + math.pow(mouse_pos[1] - player.checkers[i].pos[1], 2)) < 20:
+                            player.checkers[i].selected()
+                            selected_checker = player.checkers[i]
                             break
                 else:
                     for i in range(len(board_list)):
