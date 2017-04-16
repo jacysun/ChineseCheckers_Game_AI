@@ -21,7 +21,7 @@ moves = []
 visited = []
 
 
-class Team:
+class Player:
     def __init__(self, color):
         self.color = color
         self.checkers = []
@@ -30,7 +30,7 @@ class Team:
     # distance to the furthest end
     def distance_to_goal(self):
         distance = 0
-        if self is player: # distance to (480, 680)
+        if self is human: # distance to (480, 680)
             for i in range(10):
                 distance += math.sqrt(math.pow(self.checkers[i].pos[0] - 480, 2) + math.pow(self.checkers[i].pos[1] - 680, 2))
         else: # distance to (480, 40)
@@ -42,7 +42,7 @@ class Team:
     # y to the furthest end
     def y_to_goal(self):
         distance = 0
-        if self is player:  # distance to 680
+        if self is human:  # distance to 680
             for i in range(10):
                 distance += math.pow(680 - self.checkers[i].pos[1], 2)
         else:  # distance to 40
@@ -59,8 +59,8 @@ class Team:
         return distance
 
 
-player = Team(red)
-ai = Team(blue)
+human = Player(red)
+ai = Player(blue)
 
 
 class Checker:
@@ -76,11 +76,11 @@ class Checker:
         # show possible moves
         global moves, visited
         moves = []
-        player.checker_pos = []
+        human.checker_pos = []
         ai.checker_pos = []
         visited = []
-        for i in range(len(player.checkers)):
-            player.checker_pos.append(player.checkers[i].pos)
+        for i in range(len(human.checkers)):
+            human.checker_pos.append(human.checkers[i].pos)
         for i in range(len(ai.checkers)):
             ai.checker_pos.append(ai.checkers[i].pos)
 
@@ -133,9 +133,9 @@ def draw_board():
 def init_checkers():
     for i in range(0, 10):
         piece = Checker(board_list[i])
-        piece.render(player.color)
-        player.checkers.append(piece)
-        player.checker_pos.append(board_list[i])
+        piece.render(human.color)
+        human.checkers.append(piece)
+        human.checker_pos.append(board_list[i])
     for i in reversed(range(len(board_list)-10, len(board_list))):
         piece = Checker(board_list[i])
         piece.render(ai.color)
@@ -144,7 +144,7 @@ def init_checkers():
 
 
 def is_free(pos):
-    if pos in board_list and pos not in player.checker_pos and pos not in ai.checker_pos:
+    if pos in board_list and pos not in human.checker_pos and pos not in ai.checker_pos:
         return True
     else:
         return False
@@ -159,7 +159,7 @@ def possible_moves(pos, hop):
     # check top_left
     if is_free((x-22, y-40)) and hop is False:
         moves.append((x-22, y-40))
-    elif ((x-22, y-40) in player.checker_pos or (x-22, y-40) in ai.checker_pos) and (x-22, y-40) not in visited:
+    elif ((x-22, y-40) in human.checker_pos or (x-22, y-40) in ai.checker_pos) and (x-22, y-40) not in visited:
         visited.append((x-22, y-40))
         if is_free((x - 22 * 2, y - 40 * 2)):
             moves.append((x - 22 * 2, y - 40 * 2))
@@ -168,7 +168,7 @@ def possible_moves(pos, hop):
     # check top_right
     if is_free((x + 22, y - 40)) and hop is False:
         moves.append((x + 22, y - 40))
-    elif ((x + 22, y - 40) in player.checker_pos or (x+22, y-40) in ai.checker_pos) and (x + 22, y - 40) not in visited:
+    elif ((x + 22, y - 40) in human.checker_pos or (x+22, y-40) in ai.checker_pos) and (x + 22, y - 40) not in visited:
         visited.append((x + 22, y - 40))
         if is_free((x + 22 * 2, y - 40 * 2)):
             moves.append((x + 22 * 2, y - 40 * 2))
@@ -177,7 +177,7 @@ def possible_moves(pos, hop):
     # check left
     if is_free((x - 44, y)) and hop is False:
         moves.append((x -44, y))
-    elif ((x -44, y) in player.checker_pos or (x-44, y) in ai.checker_pos) and (x -44, y) not in visited:
+    elif ((x -44, y) in human.checker_pos or (x-44, y) in ai.checker_pos) and (x -44, y) not in visited:
         visited.append((x -44, y))
         if is_free((x -44 * 2, y)):
             moves.append((x -44 * 2, y))
@@ -186,7 +186,7 @@ def possible_moves(pos, hop):
     # check right
     if is_free((x + 44, y)) and hop is False:
         moves.append((x + 44, y))
-    elif ((x + 44, y) in player.checker_pos or (x+44, y) in ai.checker_pos) and (x + 44, y) not in visited:
+    elif ((x + 44, y) in human.checker_pos or (x+44, y) in ai.checker_pos) and (x + 44, y) not in visited:
         visited.append((x + 44, y))
         if is_free((x + 44 * 2, y)):
             moves.append((x + 44 * 2, y))
@@ -195,7 +195,7 @@ def possible_moves(pos, hop):
     # check down_left
     if is_free((x - 22, y + 40)) and hop is False:
         moves.append((x - 22, y + 40))
-    elif ((x - 22, y + 40) in player.checker_pos or (x-22, y+40) in ai.checker_pos) and (x - 22, y + 40) not in visited:
+    elif ((x - 22, y + 40) in human.checker_pos or (x-22, y+40) in ai.checker_pos) and (x - 22, y + 40) not in visited:
         visited.append((x - 22, y + 40))
         if is_free((x - 22 * 2, y + 40 * 2)):
             moves.append((x - 22 * 2, y + 40 * 2))
@@ -204,7 +204,7 @@ def possible_moves(pos, hop):
     # check down_right
     if is_free((x + 22, y + 40)) and hop is False:
         moves.append((x + 22, y + 40))
-    elif ((x + 22, y + 40) in player.checker_pos or (x+22, y+40) in ai.checker_pos) and (x + 22, y + 40) not in visited:
+    elif ((x + 22, y + 40) in human.checker_pos or (x+22, y+40) in ai.checker_pos) and (x + 22, y + 40) not in visited:
         visited.append((x + 22, y + 40))
         if is_free((x + 22 * 2, y + 40 * 2)):
             moves.append((x + 22 * 2, y + 40 * 2))
@@ -216,6 +216,6 @@ def get_moves():
 
 
 def eval_value():
-    return 0.5 * (player.y_to_goal() - ai.y_to_goal()) + 0.5 * (player.distance_to_midline() - ai.distance_to_midline())
+    return 0.5 * (human.y_to_goal() - ai.y_to_goal()) + 0.5 * (human.distance_to_midline() - ai.distance_to_midline())
 
 

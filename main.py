@@ -12,12 +12,12 @@ def game_loop():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                global selected_checker, player, ai
+                global selected_checker, human, ai
                 if selected_checker is None:
-                    for i in range(len(player.checkers)):
-                        if math.sqrt(math.pow(mouse_pos[0] - player.checkers[i].pos[0], 2) + math.pow(mouse_pos[1] - player.checkers[i].pos[1], 2)) < 20:
-                            player.checkers[i].selected()
-                            selected_checker = player.checkers[i]
+                    for i in range(len(human.checkers)):
+                        if math.sqrt(math.pow(mouse_pos[0] - human.checkers[i].pos[0], 2) + math.pow(mouse_pos[1] - human.checkers[i].pos[1], 2)) < 20:
+                            human.checkers[i].selected()
+                            selected_checker = human.checkers[i]
                             break
                 else:
                     for i in range(len(board_list)):
