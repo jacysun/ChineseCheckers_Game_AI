@@ -69,12 +69,13 @@ class Player:
 
     # ai make a move
     def make_move(self):
-        # call minimax function and return two things: the checker that will be moved (target), and the new_pos
+        # call minimax function and return two things: the target checker object that will be moved (target), and the new_pos
         # target =
         # new_pos =
         # pygame.draw.circle(screen, white, target.pos, 20, 0)
         # pygame.draw.circle(screen, black, target.pos, 20, 1)
         # pygame.draw.circle(screen, blue, new_pos, 20, 0)
+        # target.pos = new_pos
         print("ai has just made a move")
 
 
