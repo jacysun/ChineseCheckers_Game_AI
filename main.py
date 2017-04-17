@@ -1,6 +1,8 @@
 from board import *
 
-pygame.init()
+
+selected_checker = None
+turn = 0  # 0 is human's turn, 1 is ai's turn
 
 
 def game_loop():
@@ -10,9 +12,9 @@ def game_loop():
                 pygame.quit()
                 quit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            global selected_checker, human, ai, turn
+            if event.type == pygame.MOUSEBUTTONDOWN and turn == 0:
                 mouse_pos = pygame.mouse.get_pos()
-                global selected_checker, human, ai
                 if selected_checker is None:
                     for i in range(len(human.checkers)):
                         if math.sqrt(math.pow(mouse_pos[0] - human.checkers[i].pos[0], 2) + math.pow(mouse_pos[1] - human.checkers[i].pos[1], 2)) < 20:
@@ -26,14 +28,20 @@ def game_loop():
                             selected_checker = None
                             break
                         if math.sqrt(math.pow(mouse_pos[0] - board_list[i][0], 2) + math.pow(mouse_pos[1] - board_list[i][1], 2)) < 20:
-                            moves = get_moves()
+                            moves = selected_checker.get_moves()
                             if board_list[i] in moves:
                                 selected_checker.move(board_list[i])
                                 selected_checker = None
+                                turn = 1
                             break
+
+            elif turn == 1: # ai's turn to make a move
+                ai.make_move()
+                turn = 0
         pygame.display.update()
 
 
+pygame.init()
 draw_board()
 init_checkers()
 game_loop()
