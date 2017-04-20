@@ -283,4 +283,8 @@ def is_mixed():
     else:
         return True
 
-
+def list_to_set(list):
+    s = set([])
+    for i in range(len(list)):
+        s.add(list[i])
+    return s
