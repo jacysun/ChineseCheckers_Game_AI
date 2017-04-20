@@ -1,5 +1,6 @@
 import pygame
 import math
+from a_star import *
 
 
 screen = pygame.display.set_mode((960, 720))
@@ -17,6 +18,8 @@ light_blue = (0, 0, 255)
 pink = (255, 200, 200)
 
 visited = []
+astar_moves = []
+astar_count = 0
 
 
 class Player:
@@ -62,20 +65,27 @@ class Player:
         advance = 0
         for i in range(10):
             self.checkers[i].moves = []
-            self.checkers[i].possible_moves(self.checkers[i].pos, False)
+            self.checkers[i].possible_moves(self.checkers[i].pos, False, 0)
             advance += abs(self.checkers[i].best_vertical_move() - self.checkers[i].pos[1])
 
         return advance
 
     # ai make a move
     def make_move(self):
-        # call minimax function and return two things: the target checker object that will be moved (target), and the new_pos
-        # target =
-        # new_pos =
-        # pygame.draw.circle(screen, white, target.pos, 20, 0)
-        # pygame.draw.circle(screen, black, target.pos, 20, 1)
-        # pygame.draw.circle(screen, blue, new_pos, 20, 0)
-        # target.pos = new_pos
+        global astar_count, astar_moves
+
+        if is_mixed() is False:  # use A star
+            target = astar_moves[astar_count][0]
+            new = astar_moves[astar_count][1]
+            pygame.draw.circle(screen, white, target.pos, 20, 0)
+            pygame.draw.circle(screen, black, target.pos, 20, 1)
+            pygame.draw.circle(screen, blue, new.pos, 20, 0)
+            astar_count += 1
+            for i in range(10):
+                if ai.checkers[i] is target:
+                    ai.checkers[i] = new
+        else:  # use minimax, return the checker object that will be moved (target), and the new checker object (new) or position
+            print("wait for minimax")
         print("ai has just made a move")
 
 
@@ -98,14 +108,13 @@ class Checker:
         global visited
         human.checker_pos = []
         ai.checker_pos = []
-        visited = []
         for i in range(len(human.checkers)):
             human.checker_pos.append(human.checkers[i].pos)
         for i in range(len(ai.checkers)):
             ai.checker_pos.append(ai.checkers[i].pos)
 
         if len(self.moves) == 0:
-            self.possible_moves(self.pos, False)
+            self.possible_moves(self.pos, False, 0)
 
         for i in range(len(self.moves)):
             pygame.draw.circle(screen, pink, self.moves[i], 20, 0)
@@ -131,8 +140,10 @@ class Checker:
                 pygame.draw.circle(screen, black, self.moves[i], 20, 1)
         self.moves = []
 
-    def possible_moves(self, pos, hop):
+    def possible_moves(self, pos, hop, mode):
         global visited
+        if mode == 0:
+            visited = []
 
         x = pos[0]
         y = pos[1]
@@ -145,7 +156,7 @@ class Checker:
             visited.append((x - 22, y - 40))
             if is_free((x - 22 * 2, y - 40 * 2)):
                 self.moves.append((x - 22 * 2, y - 40 * 2))
-                self.possible_moves((x - 22 * 2, y - 40 * 2), True)
+                self.possible_moves((x - 22 * 2, y - 40 * 2), True, 1)
 
         # check top_right
         if is_free((x + 22, y - 40)) and hop is False:
@@ -155,7 +166,7 @@ class Checker:
             visited.append((x + 22, y - 40))
             if is_free((x + 22 * 2, y - 40 * 2)):
                 self.moves.append((x + 22 * 2, y - 40 * 2))
-                self.possible_moves((x + 22 * 2, y - 40 * 2), True)
+                self.possible_moves((x + 22 * 2, y - 40 * 2), True, 1)
 
         # check left
         if is_free((x - 44, y)) and hop is False:
@@ -164,7 +175,7 @@ class Checker:
             visited.append((x - 44, y))
             if is_free((x - 44 * 2, y)):
                 self.moves.append((x - 44 * 2, y))
-                self.possible_moves((x - 44 * 2, y), True)
+                self.possible_moves((x - 44 * 2, y), True, 1)
 
         # check right
         if is_free((x + 44, y)) and hop is False:
@@ -173,7 +184,7 @@ class Checker:
             visited.append((x + 44, y))
             if is_free((x + 44 * 2, y)):
                 self.moves.append((x + 44 * 2, y))
-                self.possible_moves((x + 44 * 2, y), True)
+                self.possible_moves((x + 44 * 2, y), True, 1)
 
         # check down_left
         if is_free((x - 22, y + 40)) and hop is False:
@@ -183,7 +194,7 @@ class Checker:
             visited.append((x - 22, y + 40))
             if is_free((x - 22 * 2, y + 40 * 2)):
                 self.moves.append((x - 22 * 2, y + 40 * 2))
-                self.possible_moves((x - 22 * 2, y + 40 * 2), True)
+                self.possible_moves((x - 22 * 2, y + 40 * 2), True, 1)
 
         # check down_right
         if is_free((x + 22, y + 40)) and hop is False:
@@ -193,7 +204,7 @@ class Checker:
             visited.append((x + 22, y + 40))
             if is_free((x + 22 * 2, y + 40 * 2)):
                 self.moves.append((x + 22 * 2, y + 40 * 2))
-                self.possible_moves((x + 22 * 2, y + 40 * 2), True)
+                self.possible_moves((x + 22 * 2, y + 40 * 2), True, 1)
 
     def get_moves(self):
         return self.moves
@@ -234,6 +245,7 @@ def draw_board():
 
 
 def init_checkers():
+    global astar_moves
     for i in range(0, 10):
         piece = Checker(board_list[i])
         piece.render(human.color)
@@ -244,6 +256,7 @@ def init_checkers():
         piece.render(ai.color)
         ai.checkers.append(piece)
         ai.checker_pos.append(board_list[i])
+    astar_moves = a_star(ai.checkers, human.checkers)
 
 
 def is_free(pos):
@@ -255,5 +268,19 @@ def is_free(pos):
 
 def eval_value():
     return 0.3 * (human.y_to_goal() - ai.y_to_goal()) + 0.3 * (human.distance_to_midline() - ai.distance_to_midline()) + 0.4 * (ai.vertical_advance() - human.vertical_advance())
+
+
+def is_mixed():
+    human_max = 0
+    ai_min = 700
+    for i in range(10):
+        if human.checkers[i].pos[1] > human_max:
+            human_max = human.checkers[i].pos[1]
+        if ai.checkers[i].pos[1] < ai_min:
+            ai_min = ai.checkers[i].pos[1]
+    if (ai_min - human_max) > 120:  # no interactions
+        return False
+    else:
+        return True
 
 

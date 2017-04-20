@@ -35,8 +35,8 @@ def game_loop():
                                 turn = 1
                             break
 
-            elif turn == 1: # ai's turn to make a move
-                ai.make_move()
+            elif turn == 1:  # ai's turn to make a move
+                #ai.make_move()
                 turn = 0
         pygame.display.update()
 
