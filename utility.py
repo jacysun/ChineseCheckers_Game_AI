@@ -42,14 +42,14 @@ def vertical_advance(self, opponent):
     advance = 0
     self_list = []
     opponent_list = []
-    for i in range(len(self.checkers)):
-        self_list.append(self.checkers[i].pos)
+    for i in range(len(self)):
+        self_list.append(self[i].pos)
     for i in range(len(opponent)):
         opponent_list.append(opponent[i].pos)
     for i in range(10):
-        self.checkers[i].moves = []
-        self.checkers[i].possible_moves(self.checkers[i].pos, False, 0, self_list, opponent_list)
-        advance += abs(self.checkers[i].best_vertical_move() - self.checkers[i].pos[1])
+        self[i].moves = []
+        self[i].possible_moves(self[i].pos, False, 0, self_list, opponent_list)
+        advance += abs(self[i].best_vertical_move() - self[i].pos[1])
 
     return advance
 

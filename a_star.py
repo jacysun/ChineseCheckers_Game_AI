@@ -88,7 +88,7 @@ def heuristic(checkers, opponent):
     for i in range(10):
         checkers[i].moves = []
         checkers[i].possible_moves(checkers[i].pos, False, 0, self_list, opponent_list)
-        h += 1.1*(checkers[i].pos[1] - 160) / 40 + 0.1*abs(checkers[i].pos[0] - 480) / 44 - 1.2 * abs(checkers[i].best_vertical_move() - checkers[i].pos[1]) / 40
+        h += 1.1 * y_to_goal("ai", checkers) + 0.1 * distance_to_midline(checkers) - 1.2 * vertical_advance(checkers, opponent) / 40
         #h += (checkers[i].pos[1] - 160) / 40
     #print("h: ", h)
     return h
