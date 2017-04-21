@@ -1,4 +1,5 @@
 import copy
+from utility import *
 
 
 class ANode:
@@ -92,12 +93,6 @@ def heuristic(checkers, opponent):
     #print("h: ", h)
     return h
 
-
-def list_to_set(list):
-    s = set([])
-    for i in range(len(list)):
-        s.add(list[i])
-    return s
 
 
 

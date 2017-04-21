@@ -1,5 +1,4 @@
 import pygame
-import math
 from a_star import *
 
 
@@ -25,66 +24,18 @@ class Player:
         self.color = color
         self.checkers = []
 
-    # distance to the furthest end
-    def distance_to_goal(self):
-        distance = 0
-        if self is human: # distance to (480, 680)
-            for i in range(10):
-                distance += math.sqrt(math.pow(self.checkers[i].pos[0] - 480, 2) + math.pow(self.checkers[i].pos[1] - 680, 2))
-        else: # distance to (480, 40)
-            for i in range(10):
-                distance += math.sqrt(math.pow(self.checkers[i].pos[0] - 480, 2) + math.pow(self.checkers[i].pos[1] - 40, 2))
-
-        return distance
-
-    # y to the furthest end
-    def y_to_goal(self):
-        distance = 0
-        if self is human:  # distance to 680
-            for i in range(10):
-                distance += math.pow(680 - self.checkers[i].pos[1], 2)
-        else:  # distance to 40
-            for i in range(10):
-                distance += math.pow(self.checkers[i].pos[1] - 40, 2)
-
-        return distance
-
-    # horizontal distance to middle line
-    def distance_to_midline(self):
-        distance = 0
-        for i in range(10):
-            distance += abs(self.checkers[i].pos[0] - 480)
-
-        return distance
-
-    # vertical advance towards goal
-    def vertical_advance(self, opponent):
-        advance = 0
-        self_list = []
-        opponent_list = []
-        for i in range(len(self.checkers)):
-            self_list.append(self.checkers[i].pos)
-        for i in range(len(opponent)):
-            opponent_list.append(opponent[i].pos)
-        for i in range(10):
-            self.checkers[i].moves = []
-            self.checkers[i].possible_moves(self.checkers[i].pos, False, 0, self_list, opponent_list)
-            advance += abs(self.checkers[i].best_vertical_move() - self.checkers[i].pos[1])
-
-        return advance
-
     # ai make a move
     def make_move(self):
         if is_mixed() is False:  # use A star
-            move = a_star(self.checkers, [], human.checkers)
-            target = move[0]
-            new = move[1]
-            pygame.draw.circle(screen, white, target.pos, 20, 0)
-            pygame.draw.circle(screen, black, target.pos, 20, 1)
-            pygame.draw.circle(screen, blue, new.pos, 20, 0)
-            for i in range(10):
-                if self.checkers[i].pos == target.pos:
-                    self.checkers[i] = new
+            # move = a_star(self.checkers, [], human.checkers)
+            # target = move[0]
+            # new = move[1]
+            # pygame.draw.circle(screen, white, target.pos, 20, 0)
+            # pygame.draw.circle(screen, black, target.pos, 20, 1)
+            # pygame.draw.circle(screen, blue, new.pos, 20, 0)
+            # for i in range(10):
+            #     if self.checkers[i].pos == target.pos:
+            #         self.checkers[i] = new
             print("ai has made a a_star move")
         else:  # use minimax, return the checker object that will be moved (target), and the new checker object (new) or position
             print("ai has made a minimax move")
@@ -242,7 +193,6 @@ def draw_board():
 
 
 def init_checkers():
-    global astar_moves
     for i in range(0, 10):
         piece = Checker(board_list[i])
         piece.render(human.color)
@@ -261,10 +211,6 @@ def is_free(pos, ai_list, human_list):
         return False
 
 
-def eval_value(ai_checkers, human_checkers):
-    return 0.3 * (human.y_to_goal() - ai.y_to_goal()) + 0.3 * (human.distance_to_midline() - ai.distance_to_midline()) + 0.4 * (ai.vertical_advance(human_checkers) - human.vertical_advance(ai_checkers))
-
-
 def is_mixed():
     human_max = 0
     ai_min = 700
@@ -279,11 +225,6 @@ def is_mixed():
         return True
 
 
-def list_to_set(list):
-    s = set([])
-    for i in range(len(list)):
-        s.add(list[i])
-    return s
 
 
 
