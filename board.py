@@ -105,7 +105,6 @@ class Checker:
     def selected(self):
         pygame.draw.circle(screen, light_red, self.pos, 20, 0)
         # show possible moves
-        global visited
         human.checker_pos = []
         ai.checker_pos = []
         for i in range(len(human.checkers)):
@@ -206,21 +205,18 @@ class Checker:
                 self.moves.append((x + 22 * 2, y + 40 * 2))
                 self.possible_moves((x + 22 * 2, y + 40 * 2), True, 1)
 
-    def get_moves(self):
-        return self.moves
-
     def best_vertical_move(self):
-        if self is human: # find the largest y
+        if self is human:  # find the largest y
             ymax = 0
             for i in range(len(self.moves)):
-                if self.moves[i] > ymax:
-                    ymax = self.moves[i]
+                if self.moves[i][1] > ymax:
+                    ymax = self.moves[i][1]
             return ymax
-        else: # find the smallest y
+        else:  # find the smallest y
             ymin = 700
             for i in range(len(self.moves)):
-                if self.moves[i] < ymin:
-                    ymin = self.moves[i]
+                if self.moves[i][1] < ymin:
+                    ymin = self.moves[i][1]
             return ymin
 
 
@@ -283,8 +279,13 @@ def is_mixed():
     else:
         return True
 
+
 def list_to_set(list):
     s = set([])
     for i in range(len(list)):
         s.add(list[i])
     return s
+
+
+
+

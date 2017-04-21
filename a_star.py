@@ -8,34 +8,17 @@ class ANode:
         self.h = h
 
     def actions(self):
-        # print("current checkers positions: ")
-        # for i in range(10):
-        #     print(self.checkers[i].pos)
-
         checker_states = []  # list of list, all 10 checkers states
-        checker_list = copy.deepcopy(self.checkers)
         for i in range(10):
+            self.checkers[i].moves = []
             self.checkers[i].possible_moves(self.checkers[i].pos, False, 0)
-            # print("This checker is: ", i, "and position is: ", self.checkers[i].pos)
-            # print("The possible moves number is: ", len(self.checkers[i].moves))
-            # print("possible moves are: ")
-            # if len(self.checkers[i].moves) > 0:
-            #     print(self.checkers[i].moves)
+            #print("possible moves from this checker: ", self.checkers[i].moves)
             for j in range(len(self.checkers[i].moves)):
+                checker_list = copy.deepcopy(self.checkers)
                 checker_list[i].pos = self.checkers[i].moves[j]
                 checker_states.append(checker_list)
-        #         print("new added state")
-        #         for k in range(10):
-        #             print(checker_list[k].pos)
-        #
-        # print(len(checker_states))
+        #print(len(checker_states))
         return checker_states
-
-    def heuristic(self):
-        h = 0
-        for i in range(10):
-            h += (self.checkers[i].pos[1] - 160) / 40
-        return h
 
 
 # if there is no interaction between human and ai, then ai just make best move to itself.
@@ -46,7 +29,7 @@ def a_star(initial, terminal):
     explored = []
     explored_count = 0
 
-    frontier.append(ANode(initial, 0, 110.0))
+    frontier.append(ANode(initial, 0, heuristic(initial)))
     while frontier:
         i = 0
         print("frontier size: ", len(frontier))
@@ -54,15 +37,19 @@ def a_star(initial, terminal):
             if (frontier[i].g + frontier[i].h) > (frontier[j].g + frontier[j].h):
                 i = j
         current = frontier[i]
+        # print("current chosen node: ")
+        # for p in range(10):
+        #     print(current.checkers[p].pos)
         frontier.remove(frontier[i])
-        if current.checkers == terminal:
+        if list_to_set(current.checkers) == list_to_set(terminal):
             break
         if current.checkers in explored:
             continue
         for state in current.actions():
             if state in explored:
+                # print("state in explored")
                 continue
-            frontier.append(ANode(state, current.g + 1, current.heuristic()))
+            frontier.append(ANode(state, current.g + 1, heuristic(state)))
         explored.append(current.checkers)
         explored_count += 1
     print("a star has explored states: ", len(explored))
@@ -76,6 +63,24 @@ def a_star(initial, terminal):
 
     print("end a star moves")
     return moves
+
+
+def heuristic(checkers):
+    h = 0
+    for i in range(10):
+        checkers[i].moves = []
+        checkers[i].possible_moves(checkers[i].pos, False, 0)
+        h += 0.3 * (checkers[i].pos[1] - 160) / 40 + 0.3 * abs(checkers[i].pos[0] - 480) / 44 + 0.4 * abs(checkers[i].best_vertical_move() - checkers[i].pos[1])
+        #h += (checkers[i].pos[1] - 160) / 40
+    #print("h: ", h)
+    return h
+
+
+def list_to_set(list):
+    s = set([])
+    for i in range(len(list)):
+        s.add(list[i])
+    return s
 
 
 
