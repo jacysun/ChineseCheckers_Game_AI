@@ -18,15 +18,12 @@ light_blue = (0, 0, 255)
 pink = (255, 200, 200)
 
 visited = []
-astar_moves = []
-astar_count = 0
 
 
 class Player:
     def __init__(self, color):
         self.color = color
         self.checkers = []
-        self.checker_pos = []
 
     # distance to the furthest end
     def distance_to_goal(self):
@@ -61,32 +58,36 @@ class Player:
         return distance
 
     # vertical advance towards goal
-    def vertical_advance(self):
+    def vertical_advance(self, opponent):
         advance = 0
+        self_list = []
+        opponent_list = []
+        for i in range(len(self.checkers)):
+            self_list.append(self.checkers[i].pos)
+        for i in range(len(opponent)):
+            opponent_list.append(opponent[i].pos)
         for i in range(10):
             self.checkers[i].moves = []
-            self.checkers[i].possible_moves(self.checkers[i].pos, False, 0)
+            self.checkers[i].possible_moves(self.checkers[i].pos, False, 0, self_list, opponent_list)
             advance += abs(self.checkers[i].best_vertical_move() - self.checkers[i].pos[1])
 
         return advance
 
     # ai make a move
     def make_move(self):
-        global astar_count, astar_moves
-
         if is_mixed() is False:  # use A star
-            target = astar_moves[astar_count][0]
-            new = astar_moves[astar_count][1]
+            move = a_star(self.checkers, [], human.checkers)
+            target = move[0]
+            new = move[1]
             pygame.draw.circle(screen, white, target.pos, 20, 0)
             pygame.draw.circle(screen, black, target.pos, 20, 1)
             pygame.draw.circle(screen, blue, new.pos, 20, 0)
-            astar_count += 1
             for i in range(10):
-                if ai.checkers[i] is target:
-                    ai.checkers[i] = new
+                if self.checkers[i].pos == target.pos:
+                    self.checkers[i] = new
+            print("ai has made a a_star move")
         else:  # use minimax, return the checker object that will be moved (target), and the new checker object (new) or position
-            print("wait for minimax")
-        print("ai has just made a move")
+            print("ai has made a minimax move")
 
 
 human = Player(red)
@@ -105,15 +106,15 @@ class Checker:
     def selected(self):
         pygame.draw.circle(screen, light_red, self.pos, 20, 0)
         # show possible moves
-        human.checker_pos = []
-        ai.checker_pos = []
+        human_list = []
+        ai_list = []
         for i in range(len(human.checkers)):
-            human.checker_pos.append(human.checkers[i].pos)
+            human_list.append(human.checkers[i].pos)
         for i in range(len(ai.checkers)):
-            ai.checker_pos.append(ai.checkers[i].pos)
+            ai_list.append(ai.checkers[i].pos)
 
         if len(self.moves) == 0:
-            self.possible_moves(self.pos, False, 0)
+            self.possible_moves(self.pos, False, 0, ai_list, human_list)
 
         for i in range(len(self.moves)):
             pygame.draw.circle(screen, pink, self.moves[i], 20, 0)
@@ -139,7 +140,7 @@ class Checker:
                 pygame.draw.circle(screen, black, self.moves[i], 20, 1)
         self.moves = []
 
-    def possible_moves(self, pos, hop, mode):
+    def possible_moves(self, pos, hop, mode, ai_list, human_list):
         global visited
         if mode == 0:
             visited = []
@@ -148,62 +149,62 @@ class Checker:
         y = pos[1]
 
         # check top_left
-        if is_free((x - 22, y - 40)) and hop is False:
+        if is_free((x - 22, y - 40), ai_list, human_list) and hop is False:
             self.moves.append((x - 22, y - 40))
-        elif ((x - 22, y - 40) in human.checker_pos or (x - 22, y - 40) in ai.checker_pos) and (
+        elif ((x - 22, y - 40) in human_list or (x - 22, y - 40) in ai_list) and (
             x - 22, y - 40) not in visited:
             visited.append((x - 22, y - 40))
-            if is_free((x - 22 * 2, y - 40 * 2)):
+            if is_free((x - 22 * 2, y - 40 * 2), ai_list, human_list):
                 self.moves.append((x - 22 * 2, y - 40 * 2))
-                self.possible_moves((x - 22 * 2, y - 40 * 2), True, 1)
+                self.possible_moves((x - 22 * 2, y - 40 * 2), True, 1, ai_list, human_list)
 
         # check top_right
-        if is_free((x + 22, y - 40)) and hop is False:
+        if is_free((x + 22, y - 40), ai_list, human_list) and hop is False:
             self.moves.append((x + 22, y - 40))
-        elif ((x + 22, y - 40) in human.checker_pos or (x + 22, y - 40) in ai.checker_pos) and (
+        elif ((x + 22, y - 40) in human_list or (x + 22, y - 40) in ai_list) and (
             x + 22, y - 40) not in visited:
             visited.append((x + 22, y - 40))
-            if is_free((x + 22 * 2, y - 40 * 2)):
+            if is_free((x + 22 * 2, y - 40 * 2), ai_list, human_list):
                 self.moves.append((x + 22 * 2, y - 40 * 2))
-                self.possible_moves((x + 22 * 2, y - 40 * 2), True, 1)
+                self.possible_moves((x + 22 * 2, y - 40 * 2), True, 1, ai_list, human_list)
 
         # check left
-        if is_free((x - 44, y)) and hop is False:
+        if is_free((x - 44, y), ai_list, human_list) and hop is False:
             self.moves.append((x - 44, y))
-        elif ((x - 44, y) in human.checker_pos or (x - 44, y) in ai.checker_pos) and (x - 44, y) not in visited:
+        elif ((x - 44, y) in human_list or (x - 44, y) in ai_list) and (x - 44, y) not in visited:
             visited.append((x - 44, y))
-            if is_free((x - 44 * 2, y)):
+            if is_free((x - 44 * 2, y), ai_list, human_list):
                 self.moves.append((x - 44 * 2, y))
-                self.possible_moves((x - 44 * 2, y), True, 1)
+                self.possible_moves((x - 44 * 2, y), True, 1, ai_list, human_list)
 
         # check right
-        if is_free((x + 44, y)) and hop is False:
+        if is_free((x + 44, y), ai_list, human_list) and hop is False:
             self.moves.append((x + 44, y))
-        elif ((x + 44, y) in human.checker_pos or (x + 44, y) in ai.checker_pos) and (x + 44, y) not in visited:
+        elif ((x + 44, y) in human_list or (x + 44, y) in ai_list) and (x + 44, y) not in visited:
             visited.append((x + 44, y))
-            if is_free((x + 44 * 2, y)):
+            if is_free((x + 44 * 2, y), ai_list, human_list):
                 self.moves.append((x + 44 * 2, y))
-                self.possible_moves((x + 44 * 2, y), True, 1)
+                self.possible_moves((x + 44 * 2, y), True, 1, ai_list, human_list)
 
         # check down_left
-        if is_free((x - 22, y + 40)) and hop is False:
+        if is_free((x - 22, y + 40), ai_list, human_list) and hop is False:
             self.moves.append((x - 22, y + 40))
-        elif ((x - 22, y + 40) in human.checker_pos or (x - 22, y + 40) in ai.checker_pos) and (
+        elif ((x - 22, y + 40) in human_list or (x - 22, y + 40) in ai_list) and (
             x - 22, y + 40) not in visited:
             visited.append((x - 22, y + 40))
-            if is_free((x - 22 * 2, y + 40 * 2)):
+            if is_free((x - 22 * 2, y + 40 * 2), ai_list, human_list):
                 self.moves.append((x - 22 * 2, y + 40 * 2))
-                self.possible_moves((x - 22 * 2, y + 40 * 2), True, 1)
+                self.possible_moves((x - 22 * 2, y + 40 * 2), True, 1, ai_list, human_list)
 
         # check down_right
-        if is_free((x + 22, y + 40)) and hop is False:
+        if is_free((x + 22, y + 40), ai_list, human_list) and hop is False:
             self.moves.append((x + 22, y + 40))
-        elif ((x + 22, y + 40) in human.checker_pos or (x + 22, y + 40) in ai.checker_pos) and (
+        elif ((x + 22, y + 40) in human_list or (x + 22, y + 40) in ai_list) and (
             x + 22, y + 40) not in visited:
             visited.append((x + 22, y + 40))
-            if is_free((x + 22 * 2, y + 40 * 2)):
+            if is_free((x + 22 * 2, y + 40 * 2), ai_list, human_list):
                 self.moves.append((x + 22 * 2, y + 40 * 2))
-                self.possible_moves((x + 22 * 2, y + 40 * 2), True, 1)
+                self.possible_moves((x + 22 * 2, y + 40 * 2), True, 1, ai_list, human_list)
 
     def best_vertical_move(self):
         if self is human:  # find the largest y
@@ -246,24 +247,22 @@ def init_checkers():
         piece = Checker(board_list[i])
         piece.render(human.color)
         human.checkers.append(piece)
-        human.checker_pos.append(board_list[i])
     for i in reversed(range(len(board_list)-10, len(board_list))):
         piece = Checker(board_list[i])
         piece.render(ai.color)
         ai.checkers.append(piece)
-        ai.checker_pos.append(board_list[i])
-    astar_moves = a_star(ai.checkers, human.checkers)
+    #astar_moves = a_star(ai.checkers, [], human.checkers)
 
 
-def is_free(pos):
-    if pos in board_list and pos not in human.checker_pos and pos not in ai.checker_pos:
+def is_free(pos, ai_list, human_list):
+    if pos in board_list and pos not in human_list and pos not in ai_list:
         return True
     else:
         return False
 
 
-def eval_value():
-    return 0.3 * (human.y_to_goal() - ai.y_to_goal()) + 0.3 * (human.distance_to_midline() - ai.distance_to_midline()) + 0.4 * (ai.vertical_advance() - human.vertical_advance())
+def eval_value(ai_checkers, human_checkers):
+    return 0.3 * (human.y_to_goal() - ai.y_to_goal()) + 0.3 * (human.distance_to_midline() - ai.distance_to_midline()) + 0.4 * (ai.vertical_advance(human_checkers) - human.vertical_advance(ai_checkers))
 
 
 def is_mixed():
