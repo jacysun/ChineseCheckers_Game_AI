@@ -44,12 +44,8 @@ def a_star(initial, terminal, opponent):
         current = frontier[i]
         path = current.path
         frontier.remove(frontier[i])
-        if len(terminal) == 0:
-            if explored_count == 100:
-                break
-        else:
-            if list_to_set(current.checkers) == list_to_set(terminal):
-                break
+        if explored_count == 100 or list_to_set(current.checkers) == list_to_set(terminal):
+            break
         if current.checkers in explored:
             continue
         for state in current.actions(current.checkers, opponent):

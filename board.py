@@ -17,7 +17,7 @@ light_blue = (0, 0, 255)
 pink = (255, 200, 200)
 
 visited = []
-phase = 0
+terminal = []
 
 
 class Player:
@@ -27,9 +27,9 @@ class Player:
 
     # ai make a move
     def make_move(self):
-        global phase
-        if is_mixed(phase) is False:  # use A star
-            move = a_star(self.checkers, [], human.checkers)
+        if is_mixed() is False:  # use A star
+            print(terminal)
+            move = a_star(self.checkers, terminal, human.checkers)
             target = move[0]
             new = move[1]
             pygame.draw.circle(screen, white, target.pos, 20, 0)
@@ -40,7 +40,6 @@ class Player:
                     self.checkers[i] = new
             print("ai has made a a_star move")
         else:  # use minimax, return the checker object that will be moved (target), and the new checker object (new) or position
-            phase = 1
             print("ai has made a minimax move")
 
 
@@ -196,10 +195,12 @@ def draw_board():
 
 
 def init_checkers():
+    global terminal
     for i in range(0, 10):
         piece = Checker(board_list[i])
         piece.render(human.color)
         human.checkers.append(piece)
+        terminal = human.checkers
     for i in reversed(range(len(board_list)-10, len(board_list))):
         piece = Checker(board_list[i])
         piece.render(ai.color)
@@ -213,31 +214,29 @@ def is_free(pos, ai_list, human_list):
         return False
 
 
-def is_mixed(phase):
-    if phase == 0:  # starting phase
-        human_max = 0
-        ai_min = 700
-        for i in range(10):
-            if human.checkers[i].pos[1] > human_max:
-                human_max = human.checkers[i].pos[1]
-            if ai.checkers[i].pos[1] < ai_min:
-                ai_min = ai.checkers[i].pos[1]
-        if (ai_min - human_max) > 120:  # no interactions
-            return False
-        else:
-            return True
-    else:  # ending phase
-        human_min = 700
-        ai_max = 0
-        for i in range(10):
-            if human.checkers[i].pos[1] < human_min:
-                human_min = human.checkers[i].pos[1]
-            if ai.checkers[i].pos[1] > ai_max:
-                ai_max = ai.checkers[i].pos[1]
-        if (human_min - ai_max) > 120:  # no interactions
-            return False
-        else:
-            return True
+def is_mixed():
+    human_max = 0
+    ai_min = 700
+    human_min = 700
+    ai_max = 0
+
+    for i in range(10):
+        if human.checkers[i].pos[1] > human_max:
+            human_max = human.checkers[i].pos[1]
+        if ai.checkers[i].pos[1] < ai_min:
+            ai_min = ai.checkers[i].pos[1]
+
+    for i in range(10):
+        if human.checkers[i].pos[1] < human_min:
+            human_min = human.checkers[i].pos[1]
+        if ai.checkers[i].pos[1] > ai_max:
+            ai_max = ai.checkers[i].pos[1]
+
+    if (human_min < ai_min and (ai_min - human_max) > 120) or (ai_min < human_min and (human_min - ai_max) > 120):  # no interactions
+        return False
+    else:
+        return True
+
 
 
 
