@@ -20,10 +20,10 @@ def y_to_goal(player, checkers):
     distance = 0
     if player == "human":  # distance to 680
         for i in range(10):
-            distance += math.pow(680 - checkers[i].pos[1], 2)
+            distance += abs(680 - checkers[i].pos[1])
     else: # distance to 40
         for i in range(10):
-            distance += math.pow(checkers[i].pos[1] - 40, 2)
+            distance += abs(checkers[i].pos[1] - 40)
 
     return distance
 
