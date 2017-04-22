@@ -28,7 +28,6 @@ class Player:
     # ai make a move
     def make_move(self):
         if is_mixed() is False:  # use A star
-            print(terminal)
             move = a_star(self.checkers, terminal, human.checkers)
             target = move[0]
             new = move[1]
