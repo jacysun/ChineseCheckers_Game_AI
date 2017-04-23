@@ -55,7 +55,7 @@ def vertical_advance(self, opponent):
 
 
 def eval_value(ai_checkers, human_checkers):
-    return 0.3 * (y_to_goal("human", human_checkers) - y_to_goal("ai", ai_checkers)) + 0.3 * (distance_to_midline(human_checkers) - distance_to_midline(ai_checkers)) + 0.4 * (vertical_advance(ai_checkers, human_checkers) - vertical_advance(human_checkers, ai_checkers))
+    return 0.7 * (y_to_goal("human", human_checkers) - y_to_goal("ai", ai_checkers)) + 0.2 * (distance_to_midline(human_checkers) - distance_to_midline(ai_checkers)) + 0.3 * (vertical_advance(ai_checkers, human_checkers) - vertical_advance(human_checkers, ai_checkers))
 
 
 def list_to_set(list):

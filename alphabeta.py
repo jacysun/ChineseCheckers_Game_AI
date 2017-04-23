@@ -1,4 +1,4 @@
-from board import *
+import copy
 from utility import *
 
 class Node:
@@ -24,7 +24,7 @@ class Node:
                 checker_states.append(checker_list)
         return checker_states
 
-maxDepth = 3
+maxDepth = 2
 
 def alpha_beta(state, terminal, human_terminal, opponent):
     infinity = float('inf')
@@ -51,7 +51,7 @@ def alpha_beta(state, terminal, human_terminal, opponent):
     return best_move
 
 def max_value(state, alpha, beta, terminal, human_terminal, opponent, depth):
-    print(depth)
+    # print(depth)
     global maxDepth
     if terminal_test(state, terminal) or terminal_test(opponent, human_terminal) or depth >= maxDepth:
         d = eval_value(state, opponent)
@@ -76,7 +76,7 @@ def max_value(state, alpha, beta, terminal, human_terminal, opponent, depth):
     return value
 
 def min_value(state, alpha, beta, terminal, human_terminal, opponent, depth):
-    print(depth)
+    # print(depth)
     global maxDepth
     if terminal_test(state, terminal) or terminal_test(opponent, human_terminal) or depth >= maxDepth:
         d = eval_value(state, opponent)

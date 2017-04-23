@@ -76,8 +76,8 @@ class Checker:
         for i in range(len(ai.checkers)):
             ai_list.append(ai.checkers[i].pos)
 
-        if len(self.moves) == 0:
-            self.possible_moves(self.pos, False, 0, ai_list, human_list)
+        self.moves = []
+        self.possible_moves(self.pos, False, 0, ai_list, human_list)
 
         for i in range(len(self.moves)):
             pygame.draw.circle(screen, pink, self.moves[i], 20, 0)
@@ -89,7 +89,6 @@ class Checker:
         for i in range(len(self.moves)):
             pygame.draw.circle(screen, white, self.moves[i], 20, 0)
             pygame.draw.circle(screen, black, self.moves[i], 20, 1)
-        self.moves = []
 
     def move(self, new_pos):
         pygame.draw.circle(screen, white, self.pos, 20, 0)

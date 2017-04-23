@@ -37,14 +37,14 @@ def a_star(initial, terminal, opponent):
     frontier.append(ANode(initial, 0, heuristic(initial, opponent), [initial]))
     while frontier:
         i = 0
-        #print("frontier size: ", len(frontier))
         for j in range(1, len(frontier)):
             if (frontier[i].g + frontier[i].h) > (frontier[j].g + frontier[j].h):
                 i = j
         current = frontier[i]
+        # print("f: ", current.g + current.h)
         path = current.path
         frontier.remove(frontier[i])
-        if explored_count == 100 or list_to_set(current.checkers) == list_to_set(terminal):
+        if explored_count == 200 or list_to_set(current.checkers) == list_to_set(terminal):
             break
         if current.checkers in explored:
             continue
@@ -77,8 +77,8 @@ def heuristic(checkers, opponent):
         opponent_list.append(opponent[i].pos)
     for i in range(10):
         #h += 0.3 * y_to_goal("ai", checkers) / 40 + 0.1 * distance_to_midline(checkers) / 44 - 1.5 * vertical_advance(checkers, opponent) / 40
-        h += 0.2 * y_to_goal("ai", checkers) / 40 + 0.1 * distance_to_midline(checkers) / 44
-    #print("h: ", h)
+        h += 0.1 * y_to_goal("ai", checkers) / 40 + 0.05 * distance_to_midline(checkers) / 44
+    # print("h: ", h)
     return h
 
 
