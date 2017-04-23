@@ -17,7 +17,8 @@ light_blue = (0, 0, 255)
 pink = (255, 200, 200)
 
 visited = []
-terminal = []
+ai_terminal = []
+human_terminal = []
 
 
 class Player:
@@ -28,7 +29,7 @@ class Player:
     # ai make a move
     def make_move(self):
         if is_mixed() is False:  # use A star
-            move = a_star(self.checkers, terminal, human.checkers)
+            move = a_star(self.checkers, ai_terminal, human.checkers)
             target = move[0]
             new = move[1]
             pygame.draw.circle(screen, white, target.pos, 20, 0)
@@ -174,7 +175,7 @@ class Checker:
 
 
 # static methods
-def draw_board():
+def init_board():
     for i in range(0, 4):
         for j in range(i+1):
             board_list.append((a - 22 * i + 44 * j, d * (i + 1)))
@@ -188,22 +189,27 @@ def draw_board():
         for j in range(17-i):
             board_list.append((a - 22 * (16-i) + 44 * j, d * (i + 1)))
 
+
+def draw_board():
     screen.fill(white)
     for i in range(len(board_list)):
         pygame.draw.circle(screen, black, board_list[i], 20, 1)
 
 
 def init_checkers():
-    global terminal
+    global ai_terminal, human_terminal
+    human.checkers = []
+    ai.checkers = []
     for i in range(0, 10):
         piece = Checker(board_list[i])
         piece.render(human.color)
         human.checkers.append(piece)
-        terminal = human.checkers
     for i in reversed(range(len(board_list)-10, len(board_list))):
         piece = Checker(board_list[i])
         piece.render(ai.color)
         ai.checkers.append(piece)
+    ai_terminal = human.checkers
+    human_terminal = ai.checkers
 
 
 def is_free(pos, ai_list, human_list):
