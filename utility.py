@@ -53,6 +53,17 @@ def vertical_advance(self, opponent):
 
     return advance
 
+def checker_looseness(checkers):
+    distance = 0
+    c_list = []
+
+    for i in range(len(checkers)):
+        g = checkers[i].pos
+        c_list.append(g[1])
+    average = sum(c_list)/len(c_list)
+    for i in range(len(c_list)):
+        distance += abs(c_list[i] - average)
+    return distance
 
 def eval_value(ai_checkers, human_checkers):
     return 0.7 * (y_to_goal("human", human_checkers) - y_to_goal("ai", ai_checkers)) + 0.2 * (distance_to_midline(human_checkers) - distance_to_midline(ai_checkers)) + 0.3 * (vertical_advance(ai_checkers, human_checkers) - vertical_advance(human_checkers, ai_checkers))
