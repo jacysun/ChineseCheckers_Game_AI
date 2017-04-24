@@ -209,16 +209,39 @@ def init_checkers():
     global ai_terminal, human_terminal
     human.checkers = []
     ai.checkers = []
-    for i in range(0, 10):
+    for i in range(10):
         piece = Checker(board_list[i])
         piece.render(human.color)
         human.checkers.append(piece)
+        ai_terminal.append(piece)
     for i in reversed(range(len(board_list)-10, len(board_list))):
         piece = Checker(board_list[i])
         piece.render(ai.color)
         ai.checkers.append(piece)
-    ai_terminal = human.checkers
-    human_terminal = ai.checkers
+        human_terminal.append(piece)
+
+
+# test ending phase
+# def init_checkers():
+#     global ai_terminal, human_terminal
+#
+#     for i in range(10):
+#         piece = Checker(board_list[i])
+#         ai_terminal.append(piece)
+#     for i in reversed(range(len(board_list)-10, len(board_list))):
+#         piece = Checker(board_list[i])
+#         human_terminal.append(piece)
+#
+#     human.checkers = []
+#     ai.checkers = []
+#     for i in range(1, 11):
+#         piece = Checker(board_list[i])
+#         piece.render(ai.color)
+#         ai.checkers.append(piece)
+#     for i in reversed(range(len(board_list)-11, len(board_list)-1)):
+#         piece = Checker(board_list[i])
+#         piece.render(human.color)
+#         human.checkers.append(piece)
 
 
 def is_free(pos, ai_list, human_list):

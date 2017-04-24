@@ -98,7 +98,7 @@ def game_loop():
                         if math.sqrt(math.pow(mouse_pos[0] - board_list[i][0], 2) + math.pow(mouse_pos[1] - board_list[i][1], 2)) < 20:
                             if board_list[i] in selected_checker.moves:
                                 selected_checker.move(board_list[i])
-                                if list_to_set(human.checkers) == list_to_set(human_terminal):
+                                if is_terminal(human.checkers, human_terminal):
                                     game_end(human)
                                 else:
                                     selected_checker = None
@@ -108,7 +108,7 @@ def game_loop():
             elif turn == 1:  # ai's turn to make a move
                 ai.make_move()
                 turn = 0
-                if list_to_set(ai.checkers) == list_to_set(ai_terminal):
+                if is_terminal(ai.checkers, ai_terminal):
                     game_end(ai)
         pygame.display.update()
 

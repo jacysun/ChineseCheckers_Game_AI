@@ -44,7 +44,7 @@ def a_star(initial, terminal, opponent):
         # print("f: ", current.g + current.h)
         path = current.path
         frontier.remove(frontier[i])
-        if explored_count == 200 or list_to_set(current.checkers) == list_to_set(terminal):
+        if explored_count == 300 or is_terminal(current.checkers, terminal):
             break
         if current.checkers in explored:
             continue
@@ -75,10 +75,11 @@ def heuristic(checkers, opponent):
         self_list.append(checkers[i].pos)
     for i in range(len(opponent)):
         opponent_list.append(opponent[i].pos)
-    for i in range(10):
-        #h += 0.3 * y_to_goal("ai", checkers) / 40 + 0.1 * distance_to_midline(checkers) / 44 - 1.5 * vertical_advance(checkers, opponent) / 40
-        h += 0.1 * y_to_goal("ai", checkers) / 40 + 0.05 * distance_to_midline(checkers) / 44
-    # print("h: ", h)
+    h += 1.5*y_to_goal("ai", checkers) / 40 + distance_to_midline(checkers) / 44 - 0.5 * vertical_advance(checkers, opponent) / 40
+    # h += y_to_goal("ai", checkers) / 40 + 0.5 * distance_to_midline(checkers) / 44
+    # for i in range(10):
+    #     h += abs(checkers[i].pos[1] - 40)/40 + 0.5 * abs(checkers[i].pos[0] - 480)/44
+    #print("h: ", h)
     return h
 
 

@@ -63,3 +63,12 @@ def list_to_set(list):
     for i in range(len(list)):
         s.add(list[i])
     return s
+
+
+def is_terminal(current, terminal):
+    current_list = []
+    terminal_list = []
+    for i in range(10):
+        current_list.append(current[i].pos)
+        terminal_list.append(terminal[i].pos)
+    return list_to_set(current_list) == list_to_set(terminal_list)
