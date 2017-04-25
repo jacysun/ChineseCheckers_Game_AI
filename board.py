@@ -29,7 +29,7 @@ class Player:
 
     # ai make a move
     def make_move(self):
-        if is_mixed() is False:  # use A star
+        #if is_mixed() is False:  # use A star
             move = a_star(self.checkers, ai_terminal, human.checkers)
             target = move[0]
             new = move[1]
@@ -40,17 +40,17 @@ class Player:
                 if self.checkers[i].pos == target.pos:
                     self.checkers[i] = new
             print("ai has made a a_star move")
-        else:  # use minimax, return the checker object that will be moved (target), and the new checker object (new) or position
-            move = alpha_beta(self.checkers, ai_terminal, human_terminal, human.checkers)
-            target = move[0]
-            new = move[1]
-            pygame.draw.circle(screen, white, target.pos, 20, 0)
-            pygame.draw.circle(screen, black, target.pos, 20, 1)
-            pygame.draw.circle(screen, blue, new.pos, 20, 0)
-            for i in range(10):
-                if self.checkers[i].pos == target.pos:
-                    self.checkers[i] = new
-            print("ai has made a minimax move")
+        # else:  # use minimax, return the checker object that will be moved (target), and the new checker object (new) or position
+        #     move = alpha_beta(self.checkers, ai_terminal, human_terminal, human.checkers)
+        #     target = move[0]
+        #     new = move[1]
+        #     pygame.draw.circle(screen, white, target.pos, 20, 0)
+        #     pygame.draw.circle(screen, black, target.pos, 20, 1)
+        #     pygame.draw.circle(screen, blue, new.pos, 20, 0)
+        #     for i in range(10):
+        #         if self.checkers[i].pos == target.pos:
+        #             self.checkers[i] = new
+        #     print("ai has made a minimax move")
 
 
 human = Player(red)
@@ -207,18 +207,24 @@ def draw_board():
 
 def init_checkers():
     global ai_terminal, human_terminal
+
+    for i in range(10):
+        piece = Checker(board_list[i])
+        ai_terminal.append(piece)
+    for i in reversed(range(len(board_list)-10, len(board_list))):
+        piece = Checker(board_list[i])
+        human_terminal.append(piece)
+
     human.checkers = []
     ai.checkers = []
     for i in range(10):
         piece = Checker(board_list[i])
         piece.render(human.color)
         human.checkers.append(piece)
-        ai_terminal.append(piece)
     for i in reversed(range(len(board_list)-10, len(board_list))):
         piece = Checker(board_list[i])
         piece.render(ai.color)
         ai.checkers.append(piece)
-        human_terminal.append(piece)
 
 
 # test ending phase
@@ -234,14 +240,21 @@ def init_checkers():
 #
 #     human.checkers = []
 #     ai.checkers = []
-#     for i in range(1, 11):
+#     for i in range(5, 15):
 #         piece = Checker(board_list[i])
 #         piece.render(ai.color)
 #         ai.checkers.append(piece)
-#     for i in reversed(range(len(board_list)-11, len(board_list)-1)):
+#     # piece = Checker(board_list[7])
+#     # piece.render(ai.color)
+#     # ai.checkers.append(piece)
+#
+#     for i in reversed(range(len(board_list)-15, len(board_list)-5)):
 #         piece = Checker(board_list[i])
 #         piece.render(human.color)
 #         human.checkers.append(piece)
+#     # piece = Checker(board_list[len(board_list)-17])
+#     # piece.render(human.color)
+#     # human.checkers.append(piece)
 
 
 def is_free(pos, ai_list, human_list):

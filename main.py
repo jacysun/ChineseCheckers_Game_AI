@@ -67,6 +67,7 @@ def game_loop():
     init_checkers()
     selected_checker = None
     turn = 0
+    ai_count = 0
 
     while True:
         button("Replay", 50, 50, 100, 50, light_red, red)
@@ -107,6 +108,8 @@ def game_loop():
 
             elif turn == 1:  # ai's turn to make a move
                 ai.make_move()
+                ai_count += 1
+                print(ai_count)
                 turn = 0
                 if is_terminal(ai.checkers, ai_terminal):
                     game_end(ai)

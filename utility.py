@@ -10,7 +10,7 @@ def distance_to_goal(player, checkers):
                 math.pow(checkers[i].pos[0] - 480, 2) + math.pow(checkers[i].pos[1] - 680, 2))
     else: # distance to (480, 40)
         for i in range(10):
-            distance += math.sqrt(math.pow(checkers[i].pos[0] - 480, 2) + math.pow(checkers[i].pos[1] - 40, 2))
+            distance += math.sqrt(math.pow(checkers[i].pos[0] - 480, 2) + math.pow(checkers[i].pos[1] - 120, 2))
 
     return distance
 
@@ -53,6 +53,7 @@ def vertical_advance(self, opponent):
 
     return advance
 
+
 def checker_looseness(checkers):
     distance = 0
     c_list = []
@@ -65,8 +66,9 @@ def checker_looseness(checkers):
         distance += abs(c_list[i] - average)
     return distance
 
+
 def eval_value(ai_checkers, human_checkers):
-    return 0.7 * (y_to_goal("human", human_checkers) - y_to_goal("ai", ai_checkers)) + 0.2 * (distance_to_midline(human_checkers) - distance_to_midline(ai_checkers)) + 0.3 * (vertical_advance(ai_checkers, human_checkers) - vertical_advance(human_checkers, ai_checkers))
+    return 0.7 * (y_to_goal("human", human_checkers) - y_to_goal("ai", ai_checkers)) + 0.2 * (distance_to_midline(human_checkers) - distance_to_midline(ai_checkers)) + 0.3 * (vertical_advance(ai_checkers, human_checkers) - vertical_advance(human_checkers, ai_checkers)) + 0.2 * (checker_looseness(human_checkers) - checker_looseness(ai_checkers))
 
 
 def list_to_set(list):
@@ -83,3 +85,16 @@ def is_terminal(current, terminal):
         current_list.append(current[i].pos)
         terminal_list.append(terminal[i].pos)
     return list_to_set(current_list) == list_to_set(terminal_list)
+
+
+def settled_count(current, terminal):
+    count = 0
+    terminal_list = []
+    for i in range(10):
+        terminal_list.append(terminal[i].pos)
+    for i in range(10):
+        if current[i].pos in terminal_list:
+            count += 1
+    return count
+
+
