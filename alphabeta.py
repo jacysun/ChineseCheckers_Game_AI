@@ -54,7 +54,7 @@ def max_value(state, alpha, beta, terminal, human_terminal, opponent, depth):
     # print(depth)
     global maxDepth
     if terminal_test(state, terminal) or terminal_test(opponent, human_terminal) or depth >= maxDepth:
-        d = eval_value(state, opponent)
+        d = eval_value(state, opponent, terminal, human_terminal)
         return d
     infinity = float('inf')
     value = -infinity
@@ -79,7 +79,7 @@ def min_value(state, alpha, beta, terminal, human_terminal, opponent, depth):
     # print(depth)
     global maxDepth
     if terminal_test(state, terminal) or terminal_test(opponent, human_terminal) or depth >= maxDepth:
-        d = eval_value(state, opponent)
+        d = eval_value(state, opponent, terminal, human_terminal)
         return d
     infinity = float('inf')
     value = infinity

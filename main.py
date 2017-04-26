@@ -1,4 +1,5 @@
 from board import *
+import time
 
 
 def text_objects(text, font):
@@ -68,8 +69,19 @@ def game_loop():
     selected_checker = None
     turn = 0
     ai_count = 0
+    human_count = 0
+    ai_time = 0
 
     while True:
+        move_string = "move count: " + str(human_count)
+        screen.fill(white, (30, 140, 150, 40))
+        message_display(move_string, 100, 150, 20)
+        if ai_time == 0:
+            time_string = "AI took:"
+        else:
+            time_string = "AI took: " + str(ai_time) + "s"
+        screen.fill(white, (20, 180, 170, 40))
+        message_display(time_string, 100, 200, 20)
         button("Replay", 50, 50, 100, 50, light_red, red)
         button("Quit", 180, 50, 100, 50, light_blue, blue)
 
@@ -99,6 +111,7 @@ def game_loop():
                         if math.sqrt(math.pow(mouse_pos[0] - board_list[i][0], 2) + math.pow(mouse_pos[1] - board_list[i][1], 2)) < 20:
                             if board_list[i] in selected_checker.moves:
                                 selected_checker.move(board_list[i])
+                                human_count += 1
                                 if is_terminal(human.checkers, human_terminal):
                                     game_end(human)
                                 else:
@@ -107,10 +120,12 @@ def game_loop():
                             break
 
             elif turn == 1:  # ai's turn to make a move
+                t0 = time.time()
                 ai.make_move()
-                ai_count += 1
-                print(ai_count)
+                ai_time = round(time.time() - t0, 2)
+                print(ai_time)
                 turn = 0
+                #ai_count += 1
                 if is_terminal(ai.checkers, ai_terminal):
                     game_end(ai)
         pygame.display.update()

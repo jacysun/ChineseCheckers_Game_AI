@@ -41,7 +41,7 @@ def a_star(initial, terminal, opponent):
             if (frontier[i].g + frontier[i].h) > (frontier[j].g + frontier[j].h):
                 i = j
         current = frontier[i]
-        print("current g: ", current.g, "current h: ", current.h)
+        #print("current g: ", current.g, "current h: ", current.h)
         path = current.path
         frontier.remove(frontier[i])
         if explored_count == 100 or is_terminal(current.checkers, terminal):
@@ -69,14 +69,14 @@ def a_star(initial, terminal, opponent):
 
 def heuristic(checkers, terminal, opponent):
     h = 0
-    #count = settled_count(checkers, terminal)
+    count = settled_count(checkers, terminal)
     # if count >= 7:
     #     h += 0.9 * (0.3 * y_to_goal("ai", checkers) / 40 + 0.15 * distance_to_midline(checkers) / 44 + 0.1 * checker_looseness(checkers) / 40 - 0.12 * vertical_advance(checkers, opponent) / 40 - 0.1 * count)
     # else:
     #     h += 0.9*(0.3 * y_to_goal("ai", checkers) / 40 + 0.15 * distance_to_midline(checkers) / 44 + 0.1 * checker_looseness(checkers) / 40 - 0.12 * vertical_advance(checkers, opponent) / 40 - 0.1 * count)
     #h += 0.9 * (0.3 * y_to_goal("ai", checkers) / 40 + 0.15 * distance_to_midline(checkers) / 44 + 0.15 * checker_looseness(checkers) / 40 - 0.1 * vertical_advance(checkers, opponent) / 40 - 0.25 * count)
-    #h += 0.9 * (0.3 * y_to_goal("ai", checkers) / 40 + 0.15 * distance_to_midline(checkers) / 44 + 0.1 * checker_looseness(checkers) / 40 - 0.12 * vertical_advance(checkers, opponent) / 40 - 0.1 * count)   # all ai 35 moves
-    h += 0.9 * (0.3 * y_to_goal("ai", checkers) / 40 + 0.15 * distance_to_midline(checkers) / 44 + 0.1 * checker_looseness(checkers) / 40 - 0.12 * vertical_advance(checkers, opponent) / 40)
+    h += 0.9 * (0.3 * y_to_goal("ai", checkers) / 40 + 0.15 * distance_to_midline(checkers) / 44 + 0.1 * checker_looseness(checkers) / 40 - 0.12 * vertical_advance(checkers, opponent) / 40 - 0.1 * count)   # all ai 35 moves
+    #h += 0.9 * (0.3 * y_to_goal("ai", checkers) / 40 + 0.15 * distance_to_midline(checkers) / 44 + 0.1 * checker_looseness(checkers) / 40 - 0.12 * vertical_advance(checkers, opponent) / 40)
     #print("h: ", h)
     return h
 
