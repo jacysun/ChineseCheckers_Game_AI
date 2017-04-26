@@ -282,7 +282,7 @@ def is_mixed():
         if ai.checkers[i].pos[1] > ai_max:
             ai_max = ai.checkers[i].pos[1]
 
-    if (human_min < ai_min and (ai_min - human_max) > 120) or (ai_min < human_min and (human_min - ai_max) > 120):  # no interactions
+    if (human_min < ai_min and (ai_min - human_max) > 120) or (ai_min < human_min and (human_min - ai_max) > 0):  # no interactions
         return False
     else:
         return True
