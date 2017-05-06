@@ -29,7 +29,7 @@ class Player:
 
     # ai make a move
     def make_move(self):
-        #if is_mixed() is False:  # use A star
+        if is_mixed() is False:  # use A star
             move = a_star(self.checkers, ai_terminal, human.checkers)
             target = move[0]
             new = move[1]
@@ -40,17 +40,17 @@ class Player:
                 if self.checkers[i].pos == target.pos:
                     self.checkers[i] = new
             print("ai has made a a_star move")
-        # else:  # use minimax, return the checker object that will be moved (target), and the new checker object (new) or position
-        #     move = alpha_beta(self.checkers, ai_terminal, human_terminal, human.checkers)
-        #     target = move[0]
-        #     new = move[1]
-        #     pygame.draw.circle(screen, white, target.pos, 20, 0)
-        #     pygame.draw.circle(screen, black, target.pos, 20, 1)
-        #     pygame.draw.circle(screen, blue, new.pos, 20, 0)
-        #     for i in range(10):
-        #         if self.checkers[i].pos == target.pos:
-        #             self.checkers[i] = new
-        #     print("ai has made a minimax move")
+        else:  # use minimax, return the checker object that will be moved (target), and the new checker object (new) or position
+            move = alpha_beta(self.checkers, ai_terminal, human_terminal, human.checkers)
+            target = move[0]
+            new = move[1]
+            pygame.draw.circle(screen, white, target.pos, 20, 0)
+            pygame.draw.circle(screen, black, target.pos, 20, 1)
+            pygame.draw.circle(screen, blue, new.pos, 20, 0)
+            for i in range(10):
+                if self.checkers[i].pos == target.pos:
+                    self.checkers[i] = new
+            print("ai has made a minimax move")
 
 
 human = Player(red)
