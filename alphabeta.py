@@ -58,12 +58,6 @@ def max_value(state, alpha, beta, terminal, human_terminal, opponent, depth):
         return d
     infinity = float('inf')
     value = -infinity
-    # for i in range(10):
-    #     print('hoho:')
-    #     print(state[i].pos)
-    #     print('haha:')
-    #     print(opponent[i].pos)
-    #     print('\n')
     node = Node(state, [state])
     successors = node.actions(state, opponent)
 
@@ -83,15 +77,9 @@ def min_value(state, alpha, beta, terminal, human_terminal, opponent, depth):
         return d
     infinity = float('inf')
     value = infinity
-
     node = Node(opponent, [opponent])
     successors = node.actions(opponent, state)
-    # for i in range(10):
-    #     print('jojo:')
-    #     print(state[i].pos)
-    #     print('jaja:')
-    #     print(opponent[i].pos)
-    #     print('\n')
+
     for child in successors:
     	# print('minnim', len(successors))
     	value = min(value, max_value(state, alpha, beta, terminal, human_terminal, child, depth+1))
